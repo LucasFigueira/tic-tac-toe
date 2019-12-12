@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jogo da Velha</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        justify-content: center;
+        text-align: center;
+      }
+      .areaJogo {
+        display: grid;
+        grid-template-columns: 100px 100px 100px;
+        grid-template-rows: 100px 100px 100px;
+        justify-content: center;
+        position: relative;
+      }
+
+      .espaco {
+        height: 100px;
+        border: solid 1px;
+      }
+      img {
+        width: 100px;
+        height: 100px;
+      }
+      .o {
+        display: none;
+      }
+      .x {
+        display: none;
+      }
+
+      .vez {
+        position: absolute;
+        top: 10px;
+        right: 80px;
+        font-family: Pixel;
+        font-size: 15px;
+        z-index: 100;
+      }
+
+      .campeao {
+        position: relative;
+        text-align: center;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="areaJogo">
+      <div onclick="verificarClick(this)" class="espaco espaco0"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco1"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco2"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco3"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco4"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco5"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco6"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco7"></div>
+      <div onclick="verificarClick(this)" class="espaco espaco8"></div>
+      <div class="vez">
+        vez:
+        <img
+          class="o"
+          style="display: block;"
+          src="https://image.flaticon.com/icons/png/128/61/61695.png"
+        />
+      </div>
+    </div>
+    <div class="campeao"><p></p></div>
+    <button onclick="location.reload()">Iniciar outro jogo</button>
+    <script>
+      var countClicks = 0;
+
+      var x = new Array(3);
+
+      for (var i = 0; i < x.length; i++) {
+        x[i] = new Array(3);
+      }
+
+      function verificarClick(obj) {
+        if (obj.children[0] != null) {
+          return;
+        }
+        const hasGanhador = document.querySelector(".campeao").children[0];
+        console.log(hasGanhador.innerHTML);
+        if (hasGanhador.innerHTML != "") {
+          return;
+        }
+        this.vez = () => {
+          const verificar = countClicks % 2;
+
+          if (verificar == 0 && countClicks < 9) {
+            const elem = document.querySelector(".vez");
+
+            const img = document.createElement("img");
+            const img2 = document.createElement("img");
+
+            elem.children[0].remove();
+            img.className = "x";
+            img.src =
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlrCkg46YKJ4vSxif0aVBR9RLXwaYevkkIt2v47NDCQ9CrA1sq&s";
+            img.style.display = "block";
+            elem.appendChild(img);
+
+            if (obj.children[0] == null) {
+              //obj.children[0].style.display = "block";
+              img2.className = "o";
+              img2.src =
+                "https://image.flaticon.com/icons/png/128/61/61695.png";
+              img2.style.display = "block";
+              obj.appendChild(img2);
+              countClicks++;
+            }
+          } else if (countClicks < 9) {
+            const elem = document.querySelector(".vez");
+            const img = document.createElement("img");
+            const img2 = document.createElement("img");
+
+            elem.children[0].remove();
+            img2.className = "o";
+            img2.src = "https://image.flaticon.com/icons/png/128/61/61695.png";
+            img2.style.display = "block";
+            elem.appendChild(img2);
+
+            if (obj.children[0] == null) {
+              img.className = "x";
+              img.src =
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlrCkg46YKJ4vSxif0aVBR9RLXwaYevkkIt2v47NDCQ9CrA1sq&s";
+              img.style.display = "block";
+              obj.appendChild(img);
+              countClicks++;
+            }
+          }
+        };
+        this.vez();
+        this.ganhador = () => {
+          console.log(x[1][0]);
+
+          const posicao = obj.classList[1].split("espaco")[1];
+          if (posicao <= 2) {
+            x[0][posicao] = obj.children[0].classList[0] == "o" ? "o" : "x";
+            console.log(x);
+          } else {
+            if (posicao <= 5) {
+              x[1][posicao == 3 ? 0 : posicao == 4 ? 1 : 2] =
+                obj.children[0].classList[0] == "o" ? "o" : "x";
+              console.log(x);
+            } else {
+              x[2][posicao == 6 ? 0 : posicao == 7 ? 1 : 2] =
+                obj.children[0].classList[0] == "o" ? "o" : "x";
+              console.log(x);
+            }
+          }
+
+          if (
+            (x[0][0] == "o" && x[0][1] == "o" && x[0][2] == "o") ||
+            (x[0][0] == "o" && x[1][0] == "o" && x[2][0] == "o") ||
+            (x[0][0] == "o" && x[1][1] == "o" && x[2][2] == "o") ||
+            (x[0][1] == "o" && x[1][1] == "o" && x[2][1] == "o") ||
+            (x[0][2] == "o" && x[1][1] == "o" && x[2][0] == "o") ||
+            (x[0][2] == "o" && x[1][2] == "o" && x[2][2] == "o") ||
+            (x[1][0] == "o" && x[1][1] == "o" && x[1][2] == "o") ||
+            (x[2][0] == "o" && x[2][1] == "o" && x[2][2] == "o")
+          ) {
+            var campeao = document.querySelector(".campeao").children[0];
+            console.log(campeao);
+            campeao.innerHTML = "O é o campeão";
+          } else {
+            if (
+              (x[0][0] == "x" && x[0][1] == "x" && x[0][2] == "x") ||
+              (x[0][0] == "x" && x[1][0] == "x" && x[2][0] == "x") ||
+              (x[0][0] == "x" && x[1][1] == "x" && x[2][2] == "x") ||
+              (x[0][1] == "x" && x[1][1] == "x" && x[2][1] == "x") ||
+              (x[0][2] == "x" && x[1][1] == "x" && x[2][0] == "x") ||
+              (x[0][2] == "x" && x[1][2] == "x" && x[2][2] == "x") ||
+              (x[1][0] == "x" && x[1][1] == "x" && x[1][2] == "x") ||
+              (x[2][0] == "x" && x[2][1] == "x" && x[2][2] == "x")
+            ) {
+              console.log(" X campeão");
+              var campeao = document.querySelector(".campeao").children[0];
+              campeao.innerHTML = "X é o campeão";
+            }
+          }
+        };
+        this.ganhador();
+      }
+    </script>
+  </body>
+</html>
